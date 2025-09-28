@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import usePWAInstall from "@/hooks/usePWAInstall";
 import InstallPrompt from "./components/InstallPrompt";
