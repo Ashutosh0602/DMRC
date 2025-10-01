@@ -5,7 +5,8 @@ const STORE = "locations";
 function openDB() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = () => req.result.createObjectStore(STORE, { autoIncrement: true });
+    req.onupgradeneeded = () =>
+      req.result.createObjectStore(STORE, { autoIncrement: true });
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
@@ -33,7 +34,7 @@ async function flushQueue() {
       }
       const value = cursor.value;
       try {
-        const r = await fetch("/api/location", {
+        const r = await fetch(`${self.location.origin}/api/locations`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(value),
