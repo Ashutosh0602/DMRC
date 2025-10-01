@@ -19,13 +19,34 @@ async function getDb() {
   return client.db(dbName);
 }
 
+// CORS utilities
+function applyCorsHeaders(response: NextResponse, origin?: string | null) {
+  const allowOrigin = origin || "*";
+  response.headers.set("Access-Control-Allow-Origin", allowOrigin);
+  response.headers.set("Vary", "Origin");
+  response.headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With"
+  );
+  response.headers.set("Access-Control-Max-Age", "86400");
+  return response;
+}
+
+export async function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  const res = new NextResponse(null, { status: 204 });
+  return applyCorsHeaders(res, origin);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { uid, lat, long } = body;
 
     if (!uid || typeof lat !== "number" || typeof long !== "number") {
-      return NextResponse.json({ error: "invalid payload" }, { status: 400 });
+      const res = NextResponse.json({ error: "invalid payload" }, { status: 400 });
+      return applyCorsHeaders(res, req.headers.get("origin"));
     }
 
     const db = await getDb();
@@ -37,9 +58,11 @@ export async function POST(req: NextRequest) {
       { upsert: true }
     );
 
-    return NextResponse.json({ ok: true });
+    const res = NextResponse.json({ ok: true });
+    return applyCorsHeaders(res, req.headers.get("origin"));
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "server error" }, { status: 500 });
+    const res = NextResponse.json({ error: "server error" }, { status: 500 });
+    return applyCorsHeaders(res, req.headers.get("origin"));
   }
 }
