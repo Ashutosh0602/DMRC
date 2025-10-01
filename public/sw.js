@@ -34,7 +34,7 @@ async function flushQueue() {
       }
       const value = cursor.value;
       try {
-        const r = await fetch("/api/locations", {
+        const r = await fetch("/api/location", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(value),
