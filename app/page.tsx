@@ -21,7 +21,7 @@ export default function HomePage() {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          await fetch("/api/track", {
+          await fetch("/api/locations", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
