@@ -21,12 +21,13 @@ export default function HomePage() {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          await fetch("/api/locations", {
+          await fetch("/api/location", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              user: newUid,
-              location: { lat: latitude, long: longitude },
+              uid: newUid,
+              lat: latitude,
+              long: longitude,
             }),
           });
         },
